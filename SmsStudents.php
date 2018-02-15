@@ -26,11 +26,12 @@ try
         echo " MessageId: " .$result->messageId;
         echo " Cost: "   .$result->cost."\n";*/
       }
-      echo "</br>Message(s) sent successfully";
+      echo "</br>";
+      prnMsg("Message(s) sent successfully",'success');
     }
     catch ( AfricasTalkingGatewayException $e )
     {
-      echo "Encountered an error while sending: ".$e->getMessage();
+      prnMsg("Encountered an error while sending: ".$e->getMessage(),'warn');
     }
 
 }

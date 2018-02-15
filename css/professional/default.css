@@ -40,8 +40,8 @@ color:blue;
  margin: 0;
  padding: 0;
  }
- #tabs li { 
- display:inline; 
+ #tabs li {
+ display:inline;
  border-top: .1em solid #03c;
  border-left: .1em solid #03c;
  border-right: .1em solid #03c;
@@ -50,11 +50,11 @@ color:blue;
  text-decoration: none;
  padding: 0.25em 1em;
  color: #000;
- } 
- 
+ }
+
  #page1 #tabs li#tab1 a, #page2 #tabs li#tab2 a{
  padding: 0.25em 1em;
- } 
+ }
  #underline{
 	border:2px solid black;
 	margin-top:3px;
@@ -100,7 +100,7 @@ a:hover {
 table{
   background-color: #EEEEFF;
   margin: 0 auto;
-  
+
 }
 
 .dpTbl {
@@ -127,7 +127,7 @@ table.selection {
 	background-color:#eee;
 	outline-style:solid white;
 	outline-width:1px;
-	
+
 }
 
 table.underline {
@@ -481,7 +481,7 @@ div.csv {
 /*	position: relative; */
 	text-align: center;
 	white-space: nowrap;
-	
+
 }
 
 .main_menu_unselected:hover{
@@ -553,7 +553,7 @@ span.main_menu_nolink {
 
 .menu_group_area {
   border: 2px inset white;
-  
+
 }
 
 .blank_area table {
@@ -583,14 +583,14 @@ span.main_menu_nolink {
 	padding: 10px;
 	-moz-border-radius: 20px;
 border-radius: 20px;
-	
+
 }
 
 .menu_group_item {
 	background-color: white;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	
+
 }
 
 .menu_group_item p {
@@ -790,4 +790,18 @@ text-align:center;
 }
 .contentList a{
 font-weight:bold;
+}
+.list-class{
+	border-top: 1px solid black;
+	border-style: dotted;
+	border-bottom:none;
+	border-left:none;
+	border-right:none;
+}
+.list-class-bottom{
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-style: dotted;
+	border-left:none;
+	border-right:none;
 }
