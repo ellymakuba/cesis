@@ -1,20 +1,13 @@
 
 <?php
-/* $Id: PcTypeTabs.php 3924 2010-09-30 15:10:30Z tim_schofield $ */
-
 $PageSecurity = 15;
-
 include('includes/session.inc');
 $title = _('Edit Marks');
 include('includes/header.inc');
-
 echo '<p class="page_title_text">' . ' ' . _('Edit Marks') . '';
-
-
 	echo "<form name='frmactive' method='post' action=" . $_SERVER['PHP_SELF'] . '>';
 	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-	echo '<table class=selection cellspacing=4><tr><td valign=top><table class=selection>';
-	
+	echo '<table class=enclosed>';
 	echo '<tr><td>' . _('Period') . ":</td>
 		<td><select name='period'>";
 		echo '<OPTION SELECTED VALUE=0>' . _('Select Period');
@@ -49,7 +42,7 @@ echo '<p class="page_title_text">' . ' ' . _('Edit Marks') . '';
 		echo '<option value='. $myrow['id'].  '>'.' '.$myrow['title'];
 		} //end while loop
 		DB_data_seek($result,0);
-	echo '</select></td></tr>';	
+	echo '</select></td></tr>';
 echo '<tr><td>' . _('Class') . ': </td><td><select tabindex="5" name="student_class">';
 $result = DB_query('SELECT * FROM classes',$db);
 while ($myrow = DB_fetch_array($result)) {
@@ -60,18 +53,18 @@ while ($myrow = DB_fetch_array($result)) {
 	}
 	echo $myrow['id'] . '>' . $myrow['class_name'];
 } //end while loop
-	echo'</select></td></tr></table></td></tr></table>';
-	echo "<br><div class='centre'><input tabindex=20 type='Submit' name='submit' value='" . _('Submit') . "'>&nbsp;<input tabindex=21 type=submit action=RESET VALUE='" . _('Reset') . "'></div>";
+	echo'</select></td></tr></table>';
+	echo "<br><div class='centre'><input tabindex=20 type='Submit' name='submit' value='" . _('Show students') . "'></div>";
 	echo '</form>';
 if (isset($_POST['submit'])) {
 $_SESSION['subject'] = $_POST['subject'];
 $_SESSION['period'] = $_POST['period'];
 $_SESSION['exam_mode'] = $_POST['exam_mode'];
 $_SESSION['class'] = $_POST['student_class'];
-echo '<br><table width="40%">';
+echo '<br><table class=enclosed>';
 echo "<form method='post' action=" . $_SERVER['PHP_SELF'] . '>';
 	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-	
+
 $sql = "SELECT fullaccess FROM www_users
 		WHERE userid=  '" . trim($_SESSION['UserID']) . "'";
 		$result=DB_query($sql,$db);
@@ -82,7 +75,7 @@ $sql="SELECT (CASE WHEN (start_marks_posting_date <= now() and end_marks_posting
 				  THEN '1'
 				  ELSE '0'
 				 END) AS postable
-FROM collegeperiods				 
+FROM collegeperiods
 WHERE id= '" . $_POST['period'] . "'";
 $result=DB_query($sql,$db);
 $myrow=DB_fetch_array($result);
@@ -109,30 +102,30 @@ $sql2 = "SELECT run FROM years
 		$myrow2 = DB_fetch_array($result2);
 		$run=$myrow2['run'];
 if($run==1){
- prnMsg(_('This academic year has already been compiled and cannot be edited'),'warn'); 
+ prnMsg(_('This academic year has already been compiled and cannot be edited'),'warn');
 exit("Note that editing was disabled due to upholding data intergrity");
-}	
+}
 
 $sql = "SELECT subject_name FROM subjects
 		WHERE id =  '". $_POST['subject']."'";
 		$result=DB_query($sql,$db);
-		$myrow=DB_fetch_row($result);	
+		$myrow=DB_fetch_row($result);
 echo "<tr><td colspan=2>" . _('Subject') . ":</td>
 	<td>".$myrow[0]."</td></tr>";
-	
+
 $sql = "SELECT class_name FROM classes
 		WHERE id =  '". $_POST['student_class']."'";
 		$result=DB_query($sql,$db);
-		$myrow=DB_fetch_row($result);	
+		$myrow=DB_fetch_row($result);
 echo "<tr><td colspan=2>" . _('Class') . ":</td>
 	<td>".$myrow[0]."</td></tr>";
 
 $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year 
+		INNER JOIN years ON years.id=cp.year
 		WHERE cp.id='".$_SESSION['period']."'";
 		$result=DB_query($sql,$db);
-		$myrow=DB_fetch_row($result);	
+		$myrow=DB_fetch_row($result);
 echo "<tr><td colspan=2>" . _('Period') . ":</td>
 	<td>".$myrow[1].'-'.$myrow[2]."</td></tr>";
 echo "<tr><td colspan=2>" . _('Out Of') . ":</td>
@@ -141,14 +134,14 @@ echo '<tr><th>' . _('ID') . '</th>
 	<th>' . _('AdmNo') . ':</th>
 	<th>' . _('Name') . ':</th>
 	<th>' . _('Marks') . ':</th></tr>';
-	
+
 	$sql = "SELECT exam_type_id FROM markingperiods
 		WHERE id='". $_POST['exam_mode'] ."'";
 		$result=DB_query($sql,$db);
 		$row = DB_fetch_array($result);
 		$real_type=$row['exam_type_id'];
-		
-         $sql = "SELECT rs.id as ids,rs.subject_id,rs.student_id,sm.marks,dm.debtorno,dm.name 
+
+         $sql = "SELECT rs.id as ids,rs.subject_id,rs.student_id,sm.marks,dm.debtorno,dm.name
 		 FROM registered_students rs
 		 INNER JOIN studentsmarks sm ON rs.id=sm.calendar_id
 		 INNER JOIN debtorsmaster dm ON dm.id=rs.student_id
@@ -160,22 +153,22 @@ echo '<tr><th>' . _('ID') . '</th>
          $DbgMsg = _('The SQL that was used to retrieve the information was');
          $ErrMsg = _('Could not check whether the group is recursive because');
          $result = DB_query($sql,$db,$ErrMsg,$DbgMsg);
-		 $count=DB_num_rows($result);	
+		 $count=DB_num_rows($result);
 	while ($row = DB_fetch_array($result))
 			{
 			 if (($j%2)==1)
 		    echo "<tr>";
-		  
+
 	echo "<tr><td class=\"visible\"><input type='checkbox' name='calendar_id[]' value='".$row['ids']."'>".$row['ids']."</td>";
-echo "<input type='hidden' name='student_id[]' value='".$row['student_id']."' readonly=''>"; 
-echo "<td class=\"visible\"><input type='text' name='student_id2[]' value='".$row['debtorno']."' readonly=''></td>"; 
-echo "<td class=\"visible\">".$row['name']."</td>"; 
+echo "<input type='hidden' name='student_id[]' value='".$row['student_id']."' readonly=''>";
+echo "<td class=\"visible\"><input type='text' name='student_id2[]' value='".$row['debtorno']."' readonly=''></td>";
+echo "<td class=\"visible\">".$row['name']."</td>";
 echo "<td class=\"visible\">"; ?><input type="text" name='marks<?php echo $row['ids']; ?>' id='marks' value='<?php echo $row['marks']; ?>' size='20' > <?php "</td>";
 	echo "</tr>";
 	 $j++;
 	}
 echo "<tr><td></td><td></td><td><input type=submit name='edit_marks' value='"._('Edit Marks')."'></td><td><input  type=submit name='delete_marks' VALUE='" . _('Delete') . "'></td></tr>";
-echo '</table><br></form>';		
+echo '</table><br></form>';
 }
 if (isset($_POST['edit_marks'])){
 $i=0;
@@ -187,16 +180,16 @@ $sql = "SELECT out_of FROM studentsmarks
 		$result=DB_query($sql,$db);
 		$row = DB_fetch_array($result);
 		$outof=$row['out_of'];
-		
+
 $sql = "SELECT exam_type_id FROM markingperiods
 		WHERE id='". $_SESSION['exam_mode'] ."'";
 		$result=DB_query($sql,$db);
 		$row = DB_fetch_array($result);
 	if($row['exam_type_id']==1){
 if($_POST['marks'.$id] > $outof){
- prnMsg(_('Marks cannot exceed Out of field'),'warn'); 
+ prnMsg(_('Marks cannot exceed Out of field'),'warn');
 exit();
-}		
+}
 
 $sql = "UPDATE studentsmarks  SET marks='" .$_POST['marks'.$id] ."',
 	actual_marks='" .$_POST['marks'.$id] ."',
@@ -209,9 +202,9 @@ $sql = "UPDATE studentsmarks  SET marks='" .$_POST['marks'.$id] ."',
 	}
 else{
 if($_POST['marks'.$id] > $outof){
- prnMsg(_('Exam marks cannot exceed out of field'),'warn'); 
+ prnMsg(_('Exam marks cannot exceed out of field'),'warn');
 exit();
-}	
+}
 $sql = "UPDATE studentsmarks  SET marks='" .$_POST['marks'.$id] ."',
 		actual_marks='" .$_POST['marks'.$id] ."',
 		percentage_marks='" .$_POST['marks'.$id] ."'
@@ -227,17 +220,15 @@ $i++;
 
 if (isset($_POST['delete_marks'])){
 	foreach($_POST['calendar_id'] as $id){
-	$sql = "DELETE FROM studentsmarks 
+	$sql = "DELETE FROM studentsmarks
 		WHERE calendar_id='" .$id ."'
 		AND exam_mode='" .$_SESSION['exam_mode'] ."'";
 		$ErrMsg = _('This marks could not be updated because');
 			$result = DB_query($sql,$db,$ErrMsg);
 			prnMsg( _('Marks deleted'),'success');
-	
+
 	}
-}		
+}
 
 include('includes/footer.inc');
 ?>
-
-

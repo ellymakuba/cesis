@@ -1,32 +1,30 @@
 <?php
-
-/* $Id: SalesGraph.php 4839 2012-01-25 23:03:03Z vvs2012 $*/
-
+$PageSecurity = 2;
  include('includes/session.inc');
  include('includes/phplot/phplot.php');
  $title=_('Subject Mean Graph');
  include('includes/header.inc');
-
+echo '<p class="page_title_text">' . ' ' . _('Subject Mean Scores Graph') . '';
  $SelectADifferentPeriod ='';
 
  if (!isset($_POST['period_id'])){
 
 	echo '<form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '">';
-	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />'; 
-	echo '<table class="selection">
+	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
+	echo '<table class=enclosed>
 			<tr><td>' . _('Select Period:') . '</td>
 			<td><select Name="period_id">';
 
 	$sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year ";
+		INNER JOIN years ON years.id=cp.year ORDER BY cp.id DESC";
 		$result=DB_query($sql,$db);
 		while ($myrow = DB_fetch_array($result)) {
 		echo '<option value='. $myrow['id'].  '>'.' '.$myrow['title'].' '.$myrow['year'];
 		} //end while loop
 		DB_data_seek($result,0);
 		echo '</select></td></tr>
-		
+
 		<tr><td>' . _('Select Class:') . '</td>
 			<td><select Name="class_id">';
 
@@ -37,8 +35,8 @@
 		} //end while loop
 		DB_data_seek($result,0);
 		echo '</select></td></tr>';
-		
-		
+
+
 	echo '<tr><td>'._('Graph Type').'</td>';
 	echo '<td><select name="GraphType">';
 	echo '<option value="bars">'._('Bar Graph').'</option>';
@@ -61,13 +59,13 @@
 
 $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year 
+		INNER JOIN years ON years.id=cp.year
 		WHERE cp.id='".$_POST['period_id']."'";
 		$result=DB_query($sql,$db);
 		$myrow=DB_fetch_array($result);
 		$term_name=$myrow['title'] .' '.$myrow['year'] ;
-		
-		$sql="SELECT grade_level FROM gradelevels 
+
+		$sql="SELECT grade_level FROM gradelevels
 		WHERE id='".$_POST['class_id']."'";
 		$result=DB_query($sql,$db);
 		$myrow=DB_fetch_array($result);
@@ -75,17 +73,17 @@ $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 
 	$graph = new PHPlot(950,450);
 	$GraphTitle ='';
-	
+
 
 	$GraphTitle .= ' ' . _(_('Class').' '.$form_name.' '. 'Subject Mean Scores for' . ' '.$term_name);
-	
-	$sql = "select lower FROM gradelevels 
+
+	$sql = "select lower FROM gradelevels
 	WHERE id='".$_POST['class_id']."'";
 	$result = DB_query($sql,$db);
 	$row = DB_fetch_row($result);
-	$lower_display=$row[0];	
+	$lower_display=$row[0];
 	if($lower_display==1){
-	
+
 	$SQL = "SELECT sub.subject_code,csm.mean FROM class_subject_mean csm
 	INNER JOIN subjects sub ON sub.id=csm.subject_id
 	WHERE csm.period_id='".$_POST['period_id']."'
@@ -109,7 +107,7 @@ $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 	$graph->SetOutputFile('companies/' .$_SESSION['DatabaseName'] .  '/reports/subject.png');
 	$graph->SetXTitle(_('Subjects'));
 	$graph->SetYTitle(_('Subject Mean'));
-	
+
 	$graph->SetXTickPos('none');
 	$graph->SetXTickLabelPos('none');
 	$graph->SetBackgroundColor('white');
@@ -150,7 +148,7 @@ $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 
 	//Draw it
 	$graph->DrawGraph();
-	echo '<table class="selection">
+	echo '<table class=enclosed>
 			<tr><td>';
 	echo '<p><img src="companies/' .$_SESSION['DatabaseName'] .  '/reports/subject.png" alt="Subjects mean score Graph"></img></p>';
 	echo '</td>

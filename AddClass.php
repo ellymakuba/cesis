@@ -1,17 +1,9 @@
 <?php
-/* $Revision: 1.21 $ */
-/* $Id: BankAccounts.php 3845 2010-09-30 14:50:07Z tim_schofield $*/
-
 $PageSecurity = 10;
-
 include('includes/session.inc');
-
 $title = _('Stream Management');
-
 include('includes/header.inc');
-
-echo '<p class="page_title_text">' . ' ' . _('Stream Management') . '';
-
+echo '<p class="page_title_text">' . ' ' . _('Manage Streams') . '';
 if (isset($_GET['SelectedClass'])) {
 	$SelectedClass=$_GET['SelectedClass'];
 } elseif (isset($_POST['SelectedClass'])) {

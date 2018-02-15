@@ -1,42 +1,22 @@
 <?php
-/* $Revision: 1.21 $ */
-/* $Id: BankAccounts.php 3845 2010-09-30 14:50:07Z tim_schofield $*/
-
 $PageSecurity = 10;
-
 include('includes/session.inc');
-
 $title = _('Subject Maintenance');
-
 include('includes/header.inc');
-
-echo '<p class="page_title_text">' . ' ' . _('Subject Maintenance') . '';       
-
+echo '<p class="page_title_text">' . ' ' . _('Manage Subjects') . '';
 if (isset($_GET['SelectedSubject'])) {
 	$SelectedSubject=$_GET['SelectedSubject'];
 } elseif (isset($_POST['SelectedSubject'])) {
 	$SelectedSubject=$_POST['SelectedSubject'];
 }
-
 if (isset($Errors)) {
 	unset($Errors);
 }
-
 $Errors = array();
-
 if (isset($_POST['submit'])) {
-
-	//initialise no input errors assumed initially before we test
 	$InputError = 0;
-
-	/* actions to take once the user has clicked the submit button
-	ie the page has called itself with some user input */
-
-	//first off validate inputs sensible
 	$i=1;
-
-	$sql="SELECT count(subject_code)
-			FROM subjects WHERE subject_code='".$_POST['subject_code']."'";
+	$sql="SELECT count(subject_code)	FROM subjects WHERE subject_code='".$_POST['subject_code']."'";
 	$result=DB_query($sql, $db);
 	$myrow=DB_fetch_row($result);
 
@@ -46,11 +26,11 @@ if (isset($_POST['submit'])) {
 		$Errors[$i] = 'course_code';
 		$i++;
 	}
-	
+
 	if (isset($SelectedSubject) AND $InputError !=1) {
 			$subject=$_POST['subject_name'];
 			$subject= strtoupper($subject);
-	
+
 			$sql = "UPDATE subjects
 				SET subject_name='$subject',
 				subject_code='" . $_POST['subject_code'] . "',
@@ -61,7 +41,7 @@ if (isset($_POST['submit'])) {
 				display='" . $_POST['display'] . "',
 				lower_display='" . $_POST['lower_display'] . "'
 			WHERE subjects.id = '" . $SelectedSubject . "'";
-		
+
 		$msg = _('The subject details have been updated');
 	} elseif ($InputError !=1) {
 
@@ -122,7 +102,7 @@ if (isset($_POST['submit'])) {
 		echo '<br> ' . _('There are') . ' ' . $myrow[0] . ' ' . _('students taking this subject');
 
 	}
-	
+
 	if (!$CancelDelete) {
 		$sql="DELETE FROM subjects WHERE id='$SelectedSubject'";
 		$result = DB_query($sql,$db);
@@ -132,16 +112,10 @@ if (isset($_POST['submit'])) {
 	unset($_GET['delete']);
 	unset($SelectedSubject);
 }
-
-/* Always show the list of accounts */
 If (!isset($SelectedSubject)) {
-	$sql = "SELECT *
-		FROM subjects
-		ORDER BY priority";
+	$sql = "SELECT *	FROM subjects	ORDER BY priority";
 	$result = DB_query($sql,$db);
-
-	echo '<table class=selection>';
-	
+	echo '<table class=enclosed>';
 	echo "<tr><th>" . _('Subject Code') . "</th>
 		<th>" . _('Subject Name') . "</th>
 		<th>" . _('Priority') . "</th>
@@ -157,7 +131,7 @@ If (!isset($SelectedSubject)) {
 			echo '<tr class="EvenTableRows">';
 			$k=0;
 		} else {
-			echo '<tr class="OddTableRows">';
+			echo '<tr>';
 			$k=1;
 		}
 
@@ -174,7 +148,7 @@ If (!isset($SelectedSubject)) {
 	else{
 	$display=_('Yes');
 	}
-	
+
 	if($myrow['lower_display']==0){
 	$lower_display=_('No');
 	}
@@ -233,14 +207,14 @@ if (isset($SelectedSubject) AND !isset($_GET['delete'])) {
 	$_POST['priority']  = $myrow['priority'];
 	$_POST['display']  = $myrow['display'];
 	$_POST['lower_display']  = $myrow['lower_display'];
-	
+
 	echo '<input type=hidden name=SelectedSubject VALUE=' . $SelectedSubject . '>';
 	echo '<input type=hidden name=subject_code VALUE=' . $_POST['subject_code'] . '>';
-	echo '<table class=selection> ';
+	echo '<table class=enclosed> ';
 } else { //end of if $Selectedbank account only do the else when a new record is being entered
-	echo '<table class=selection><tr>';
+	echo '<table class=enclosed><tr>';
 
-	
+
 }
 
 // Check if details exist, if not set some defaults

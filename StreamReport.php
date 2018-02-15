@@ -11,7 +11,7 @@ include('grades/LecturerSubjectClass.php');
 $FontSize=13;
 
 $_SESSION['class'] = $_POST['class_id'];
-$_SESSION['period'] = $_POST['period_id'];		
+$_SESSION['period'] = $_POST['period_id'];
 $PageNumber=1;
 $line_height=12;
 NewPageHeader ();
@@ -33,7 +33,7 @@ $style = array('width' => 0.70, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0,
 
 $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 INNER JOIN terms ON terms.id=cp.term_id
-INNER JOIN years ON years.id=cp.year 
+INNER JOIN years ON years.id=cp.year
 WHERE cp.id =  '". $_SESSION['period'] ."'";
 $result=DB_query($sql,$db);
 $myrow=DB_fetch_array($result);
@@ -45,12 +45,12 @@ WHERE c.id =  '". $_SESSION['class'] ."'";
 $result=DB_query($sql,$db);
 $myrow=DB_fetch_array($result);
 $class_name=$myrow['class_name'];
-/*$LeftOvers = $pdf->addTextWrap(100,$YPos-($line_height*11),500,$FontSize, _('Reportcard For').': ' . $myrow[0].'    '._('Period').': ' .$myrow2[1].'-'.$myrow2[2]);*/	
+/*$LeftOvers = $pdf->addTextWrap(100,$YPos-($line_height*11),500,$FontSize, _('Reportcard For').': ' . $myrow[0].'    '._('Period').': ' .$myrow2[1].'-'.$myrow2[2]);*/
 $LeftOvers = $pdf->addTextWrap(200,$YPos-($line_height*12),400,$FontSize,_('OVERAL STREAM PERFORMANCE'));
  $LeftOvers = $pdf->addTextWrap(200,$YPos-($line_height*12.3),80,$FontSize,'______________________________________________________________________________');
 $LeftOvers = $pdf->addTextWrap(100,$YPos-($line_height*15),300,$FontSize, $title.' ' . $year);
 $LeftOvers = $pdf->addTextWrap(300,$YPos-($line_height*15),300,$FontSize,_('Class')._(': '). $class_name);
-	
+
 $YPos +=20;
 $YPos -=$line_height;
 //Note, this is ok for multilang as this is the value of a Select, text in option is different
@@ -82,15 +82,15 @@ $pdf->starttransform();
 $pdf->xy($XPos,332);
 $pdf->rotate(90);
 $LeftOvers = $pdf->addTextWrap($XPos-45,$YPos,300,$FontSize,$s['subject_name']);
-$pdf->stoptransform();		
+$pdf->stoptransform();
 	$XPos +=(0.5*$line_width);
 		}
 $LeftOvers = $pdf->addTextWrap($XPos+35,$YPos,300,$FontSize,_('Total'));
 $LeftOvers = $pdf->addTextWrap($XPos+70,$YPos,300,$FontSize,_('Grade'));
-$LeftOvers = $pdf->addTextWrap($XPos+110,$YPos,300,$FontSize,_('Rank'));		
+$LeftOvers = $pdf->addTextWrap($XPos+110,$YPos,300,$FontSize,_('Rank'));
 $YPos -=10;
 $rank =0;
-$pdf->line(19, $YPos,$Page_Width-$Right_Margin, $YPos,$style);	
+$pdf->line(19, $YPos,$Page_Width-$Right_Margin, $YPos,$style);
 $YPos -=$line_height;
 
 foreach ($bus_report_stream->scheduled_students as $sa => $st) {
@@ -102,16 +102,16 @@ if ($YPos < ($Bottom_Margin + (2* $line_height))){ //need 5 lines grace otherwis
 $rank=$rank+1;
 $LeftOvers = $pdf->addTextWrap(200,$YPos+1,300,$FontSize,$st['initial']);
 $LeftOvers = $pdf->addTextWrap(21,$YPos+1,300,$FontSize,$st['name']);
-$pdf->line(19, $YPos,$Page_Width-$Right_Margin, $YPos,$style);	
+$pdf->line(19, $YPos,$Page_Width-$Right_Margin, $YPos,$style);
 $YPos -=(0.8*$line_height);
-	
+
 $scheduled = new scheduled_stream($st['student_id'],$db);
 $subjects_taken_by_student=0;
 $student_total=0;
 $student_total2=0;
-	
-	
-$scheduled->set_primary_vars_stream($_POST['class_id'],$st['student_id'],$_POST['period_id'],$st['id'],$db);	
+
+
+$scheduled->set_primary_vars_stream($_POST['class_id'],$st['student_id'],$_POST['period_id'],$st['id'],$db);
 $XPos2=230;
 $subject_meangrade_array=0;
 
@@ -132,7 +132,7 @@ else
 {
 	if($z['id']!=8 && $z['id']!=10 && $z['id']!=12 && $z['id']!=11 && $z['id']!=13 && $z['id']!=14)
 	{
-	$student_total2=$student_total2+$z['tmarks'];	
+	$student_total2=$student_total2+$z['tmarks'];
 	}
 }
 
@@ -142,7 +142,7 @@ if($PageNumber <2){
 		if($z['id']==4 || $z['id']==6 || $z['id']==7 || $z['id']==11 || $z['id']==10 || $z['id']==13 || $z['id']==5 || $z['id']==9){
 				if($lower==0){
 				$pdf->line($XPos2-1,$YPos+140,$XPos2-1, $YPos-11,$style);
-				}			
+				}
 		}
 	}
 	if($PageNumber >1){
@@ -150,21 +150,21 @@ if($PageNumber <2){
 	if($z['id']==4 || $z['id']==6 || $z['id']==7 || $z['id']==11 || $z['id']==10 || $z['id']==13 || $z['id']==5 || $z['id']==9){
 				if($lower==0){
 				$pdf->line($XPos2-1,$YPos+140,$XPos2-1, $YPos-11,$style);
-				}			
+				}
 		}
 	}
 
-	$XPos2 +=(0.5*$line_width);	
+	$XPos2 +=(0.5*$line_width);
 
 				}//end of scheduled subject
-	
-	
+
+
 if($PageNumber ==1){
 $pdf->line(19, $YPos+140,19, $YPos-11,$style);
 $pdf->line(195, $YPos+140,195, $YPos-11,$style);
 $pdf->line($XPos2+50,$YPos+140,$XPos2+50, $YPos-11,$style);
 $pdf->line($XPos2+14,$YPos+140,$XPos2+14, $YPos-11,$style);
-$pdf->line(210, $YPos+140,210, $YPos-11,$style);	
+$pdf->line(210, $YPos+140,210, $YPos-11,$style);
 $pdf->line(566, $YPos+140,566, $YPos-11,$style);
 }
 if($PageNumber >1){
@@ -173,11 +173,11 @@ $pdf->line(195, 832,195, $YPos-11,$style);
 $pdf->line(19, $YPos+31,19, $YPos-24,$style);
 $pdf->line($XPos2+50,$YPos+31,$XPos2+50, $YPos-11,$style);
 $pdf->line($XPos2+14,$YPos+31,$XPos2+14, $YPos-11,$style);
-$pdf->line(210, $YPos+31,210, $YPos-11,$style);	
+$pdf->line(210, $YPos+31,210, $YPos-11,$style);
 $pdf->line(566, $YPos+31,566, $YPos-11,$style);
 }
 
-$subjects_taken_by_student=students_subjects_primary($st['student_id'],$_POST['period_id'],$db);	
+$subjects_taken_by_student=students_subjects_primary($st['student_id'],$_POST['period_id'],$db);
 
 if($subjects_taken_by_student >0){
 $subjects_count=$student_total2/$subjects_taken_by_student;
@@ -196,8 +196,8 @@ $LeftOvers = $pdf->addTextWrap($XPos2-10,$YPos+10,300,$FontSize,$student_total2)
 
 $LeftOvers = $pdf->addTextWrap($XPos2+30,$YPos+10,300,$FontSize,$grade);
 
-$LeftOvers = $pdf->addTextWrap($XPos2+65,$YPos+10,300,$FontSize,$st['rank']);	
-$grand_total=$grand_total+$student_total2;					
+$LeftOvers = $pdf->addTextWrap($XPos2+65,$YPos+10,300,$FontSize,$st['rank']);
+$grand_total=$grand_total+$student_total2;
 	}//end of scheduled students
 
 $XPos3=212;
@@ -212,7 +212,7 @@ $bus_report=new bus_report($b['student_id'],$_POST['period_id'],$db);
 $totalmarks_array =$bus_report->total_marks($s['id'],$b['student_id'],$_POST['period_id'],$b['id'],$db);
 
 
-$total_marks2=$total_marks2+$totalmarks_array;	
+$total_marks2=$total_marks2+$totalmarks_array;
 $count=$count+1;
 }
 if($count > 0){
@@ -226,31 +226,28 @@ $LeftOvers = $pdf->addTextWrap($XPos3-1,$YPos+1,300,9,$total_marks2);
 $LeftOvers = $pdf->addTextWrap($XPos3,$YPos-10,300,9,number_format($subject_mean,1));
 $XPos3 +=(0.5*$line_width);
 }//end of ssubjects array foreach
-if($no_of_students>0){	
-$mean_class=$grand_total/$no_of_students;	
+if($no_of_students>0){
+$mean_class=$grand_total/$no_of_students;
 }
 $LeftOvers = $pdf->addTextWrap(21,$YPos+1,300,$FontSize,_('Total'));
 $LeftOvers = $pdf->addTextWrap($XPos3,$YPos+1,300,$FontSize,$grand_total);
-$pdf->line(19, $YPos,$Page_Width-$Right_Margin, $YPos,$style);	
+$pdf->line(19, $YPos,$Page_Width-$Right_Margin, $YPos,$style);
 $LeftOvers = $pdf->addTextWrap(21,$YPos-10,300,$FontSize,_('Mean Score'));
-$LeftOvers = $pdf->addTextWrap($XPos3,$YPos-10,300,$FontSize,number_format($mean_class,1));	
-$pdf->line(19, $YPos-11,$Page_Width-$Right_Margin, $YPos-11,$style);	
+$LeftOvers = $pdf->addTextWrap($XPos3,$YPos-10,300,$FontSize,number_format($mean_class,1));
+$pdf->line(19, $YPos-11,$Page_Width-$Right_Margin, $YPos-11,$style);
 $pdf->Output('Report-', 'I');
 
 
 }
 else { /*The option to print PDF was not hit */
-
-	
-	$title = _('Manage Students');
-
+$title = _('Manage Students');
 include('includes/header.inc');
-
+echo '<p class="page_title_text">' . ' ' . _('Stream Performance Sheet') . '';
 echo '<FORM METHOD="POST" ACTION="' . $_SERVER['PHP_SELF'] . '?' . SID . '">';
 echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-echo '<CENTER><TABLE><TR><TD>' . _('Class:') . '</TD><TD><SELECT Name="class_id">';
-		DB_data_seek($result, 0);
-		$result = DB_query('SELECT * FROM classes',$db);
+echo '<TABLE class=enclosed><TR><TD>' . _('Class:') . '</TD><TD><SELECT Name="class_id">';
+DB_data_seek($result, 0);
+$result = DB_query('SELECT * FROM classes',$db);
 while ($myrow = DB_fetch_array($result)) {
 	if ($myrow['id']==$_POST['class_id']) {
 		echo '<option selected VALUE=';
@@ -259,15 +256,15 @@ while ($myrow = DB_fetch_array($result)) {
 	}
 	echo $myrow['id'] . '>' . $myrow['class_name'];
 } //end while loop
-	echo '</SELECT></TD></TR>';
+echo '</SELECT></TD></TR>';
 echo '<CENTER><TR><TD>' . _('Period:') . '</TD><TD><SELECT Name="period_id">';
 		DB_data_seek($result, 0);
 		$sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year ";
+		INNER JOIN years ON years.id=cp.year ORDER BY cp.id DESC";
 		$result=DB_query($sql,$db);
 		while ($myrow = DB_fetch_array($result)) {
-			if ($myrow['id'] == $_POST['id']) {  
+			if ($myrow['id'] == $_POST['id']) {
 				echo '<OPTION SELECTED VALUE=';
 			} else {
 				echo '<OPTION VALUE=';
@@ -276,8 +273,7 @@ echo '<CENTER><TR><TD>' . _('Period:') . '</TD><TD><SELECT Name="period_id">';
 		} //end while loop
 	echo '</SELECT></TD></TR>';
 	echo "</TABLE>";
-	echo "<P><CENTER><INPUT TYPE='Submit' NAME='PrintPDF' VALUE='" . _('View') . "'>";
-
+	echo "<P><CENTER><INPUT TYPE='Submit' NAME='PrintPDF' VALUE='" . _('Display Sheet') . "'>";
 	include('includes/footer.inc');;
 } /*end of else not PrintPDF */
 function NewPageHeader () {
@@ -305,7 +301,7 @@ function NewPageHeader () {
 $YPos= $Page_Height-$Top_Margin;
 
 
-	
+
 
 
 }

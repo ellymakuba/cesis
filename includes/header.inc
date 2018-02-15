@@ -48,35 +48,35 @@ case 'RM':
  	echo '<div class="contentList">';
 	echo '<li>'. "<a href='" . $rootpath  . '/Students.php?' . SID . "'>" . _('Add New Student') . '</a>'.'</li>';
 	echo '<li>'. "<a href='" . $rootpath  . '/SelectStudent.php?' . SID . "'>" . _('Manage Students') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath  . '/SmsStudents.php?' . SID . "'>" . _('Send Class Messages') . '</a>'.'</li>';
         echo '</div>';
 break;
 case 'EM':
 	echo '<div class="contentList">';
+	echo '<h4 style="text-decoration:underline;text-align:center;">Transactions</h4>';
 	echo '<li>'."<a href='" . $rootpath . '/RegisterStudents.php?' . SID . "'>" . _('Students Subject Registration') . '</a>'.'</li>';
-	echo '<li>'. " <a href='" . $rootpath . '/InsertMarks.php?' . SID . "'>" . _('Enter Marks For Registered Students') . '</a>'.'</li>';
+	echo '<li>'. " <a href='" . $rootpath . '/InsertMarks.php?' . SID . "'>" . _('Enter Marks') . '</a>'.'</li>';
 	echo '<li>'. "<a href='" . $rootpath . '/DeRegisterStudents.php?' . SID . "'>" . _('Deregister Subjects') . '</a>'.'</li>';
 	echo '<li>'. " <a href='" . $rootpath . '/EditMarks.php?' . SID . "'>" . _('Edit Entered Marks') . '</a>'.'</li>';
+	echo '<li>'. " <a href='" . $rootpath . '/GenerateSubjectsMean.php?' . SID . "'>" . _('Generate Mean Scores') . '</a>'.'</li>';
+	//echo '<li>'. " <a href='" . $rootpath . '/ClassFeeBalance.php?' . SID . "'>" . _('Update Fee Balance') . '</a>'.'</li>';
+	echo '<h4 style="text-decoration:underline;text-align:center;">Reports</h4>';
+	echo '<li>'. " <a href='" . $rootpath . '/LecturerModeSubject.php?' . SID . "'>" . _('Class Exam Performance') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath . '/StreamReportCards.php?' . SID . "'>" . _('Stream Report Cards') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath . '/StreamReport.php' . SID . "'>" . _('Stream Performance Sheet') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath  . '/ClassReport.php?' . SID . "'>" . _('Class Performance Sheet') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath . '/LecturerSubject.php?' . SID . "'>" . _('Exam & CAT Breakdown') .'</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath  . '/TeacherSubjectMean.php?' . SID . "'>" . _('Subject Mean Ranking') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath  . '/SubjectMeanRanking.php?' . SID . "'>" . _('Subjects Mean Ranking') . '</a>'.'</li>';
+	echo '<li>'. " <a href='" . $rootpath . '/SubjectMeanGraph.php?' . SID . "'>" . _('Subject Mean Scores Graph') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath . '/SchoolMean.php?' . SID . "'>" . _('Class Mean Scores Ranking') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath . '/SchoolMeanGraph.php' . SID . "'>" . _('Class Mean Scores Graphs') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath  . '/ViewStudentsToRepeat.php?' . SID . "'>" . _('View Students To Repeat') . '</a>'.'</li>';
+	echo '<li>'. "<a href='" . $rootpath  . '/StudentPerClassReport.php?' . SID . "'>" . _('Student Class List') . '</a>'.'</li>';
+
+	echo '<h4 style="text-decoration:underline;text-align:center;">Maintenance</h4>';
 	echo '<li>'. "<a href='" . $rootpath  . '/AddSubject.php?' . SID . "'>" . _('Manage Subjects') . '</a>'.'</li>';
 	echo '<li>'. "<a href='" . $rootpath  . '/AddClass.php?' . SID . "'>" . _('Manage Streams') .'</a>'.'</li>';
-	echo '<li>'. " <a href='" . $rootpath . '/GenerateSubjectsMean.php?' . SID . "'>" . _('Generate Term Data') . '</a>'.'</li>';
-	echo '<li>'. " <a href='" . $rootpath . '/MultiReportCard.php?' . SID . "'>" . _('Print Class Report Cards') . '</a>'.'</li>';
-	echo '<li>'. " <a href='" . $rootpath . '/ClassFeeBalance.php?' . SID . "'>" . _('Update Fee Balance') . '</a>'.'</li>';
-
-	echo '<li>'. " <a href='" . $rootpath . '/LecturerModeSubject.php?' . SID . "'>" . _('CAT/Exam performance') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath . '/StreamReportCards.php?' . SID . "'>" . _('Print Stream End Term Report Cards') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath . '/StreamReport.php' . SID . "'>" . _('General Stream Performance') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath  . '/ClassReport.php?' . SID . "'>" . _('General Class Performance') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath . '/LecturerSubject.php?' . SID . "'>" . _('Exam and CATS Breakdown Report') .'</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath  . '/TeacherSubjectMean.php?' . SID . "'>" . _('Class Performance Per Subject') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath  . '/SubjectMeanRanking.php?' . SID . "'>" . _('Class Performance in all subjects') . '</a>'.'</li>';
-
-	echo '<li>'. " <a href='" . $rootpath . '/SubjectMeanGraph.php?' . SID . "'>" . _('Subjects Mean Graph') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath . '/schoolmean.php?' . SID . "'>" . _('School Mean') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath . '/SchoolMeanGraph.php' . SID . "'>" . _('School Mean Graphs') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath  . '/ViewStudentsToRepeat.php?' . SID . "'>" . _('View Students To Repeat') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath  . '/StudentPerClassReport.php?' . SID . "'>" . _('Student In a Class') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath  . '/SubjectMeanRanking.php?' . SID . "'>" . _('Class Performance in all subjects') . '</a>'.'</li>';
-	echo '<li>'. " <a href='" . $rootpath . '/AddSubject.php?' . SID . "'>" . _('Manage Subjects') . '</a>'.'</li>';
 	echo '<li>'. "<a href='" . $rootpath  . '/AddMarkingPeriod.php?' . SID . "'>" . _('Manage Exam Modes') . '</a>'.'</li>';
 	echo '<li>'. "<a href='" . $rootpath  . '/AddDepartment.php?' . SID . "'>" . _('Manage Departments') . '</a>'.'</li>';
 	echo '<li>'. "<a href='" . $rootpath . '/AddReportCardGrade.php?' . SID . "'>" . _('Manage Report Card Grades') . '</a>'.'</li>';
@@ -88,7 +88,6 @@ case 'EM':
 	echo '<li>'. "<a href='" . $rootpath . '/AddClass.php' . SID . "'>" . _('Manage Stream') . '</a>'.'</li>';
 	echo '<li>'. "<a href='" . $rootpath  . '/AddTerm.php?' . SID . "'>" . _('Manage Terms') . '</a>'.'</li>';
 	echo '<li>'. " <a href='" . $rootpath . '/AddYear.php?' . SID . "'>" . _('Manage Years') . '</a>'.'</li>';
-	echo '<li>'. "<a href='" . $rootpath  . '/StudentPerClassReport.php?' . SID . "'>" . _('Class  Summary') . '</a>'.'</li>';
 	echo '</div>';
 break;
 Case 'FM':

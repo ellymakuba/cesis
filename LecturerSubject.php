@@ -10,7 +10,7 @@ require('grades/LecturerSubjectClass.php');
 
 $_SESSION['class'] = $_POST['class_id'];
 $_SESSION['period'] = $_POST['period_id'];
-$_SESSION['subject'] = $_POST['subject_id'];			
+$_SESSION['subject'] = $_POST['subject_id'];
 $PageNumber=1;
 $line_height=12;
 NewPageHeader ();
@@ -37,12 +37,12 @@ $myrow=DB_fetch_array($result);
 $lecturer=$myrow['realname'];
 $subject=$myrow['subject_name'];
 
-/*$LeftOvers = $pdf->addTextWrap(100,$YPos-($line_height*11),500,$FontSize, _('Reportcard For').': ' . $myrow[0].'    '._('Period').': ' .$myrow2[1].'-'.$myrow2[2]);*/	
+/*$LeftOvers = $pdf->addTextWrap(100,$YPos-($line_height*11),500,$FontSize, _('Reportcard For').': ' . $myrow[0].'    '._('Period').': ' .$myrow2[1].'-'.$myrow2[2]);*/
 $LeftOvers = $pdf->addTextWrap(200,$YPos-($line_height*12),400,$FontSize,_('TEACHER SUBJECT PERFORMANCE'));
  $LeftOvers = $pdf->addTextWrap(200,$YPos-($line_height*12.3),100,$FontSize,'______________________________________________________________________________');
 
 $LeftOvers = $pdf->addTextWrap(120,$YPos-($line_height*15),300,$FontSize, _('Subject').': ' . $subject);
-$LeftOvers = $pdf->addTextWrap(300,$YPos-($line_height*15),300,$FontSize, _('Teacher').': ' . $lecturer);	
+$LeftOvers = $pdf->addTextWrap(300,$YPos-($line_height*15),300,$FontSize, _('Teacher').': ' . $lecturer);
 $YPos +=20;
 $YPos -=$line_height;
 //Note, this is ok for multilang as this is the value of a Select, text in option is different
@@ -79,8 +79,8 @@ foreach ($bus_report2->scheduled_students as $a => $b) {
 if ($YPos < ($Bottom_Margin + (5* $line_height))){ //need 5 lines grace otherwise start new page
 			$PageNumber++;
 			NewPageHeader ();
-		}	
-$count=$count+1;	
+		}
+$count=$count+1;
 $scheduled2 = new scheduled2($b['student_id'],$db);
 $scheduled2->set_calendar_vars2($_POST['class_id'],$b['id'],$db);
 $LeftOvers = $pdf->addTextWrap($Left_Margin2+3,$YPos+1,300,$FontSize,$scheduled2->name);
@@ -98,7 +98,7 @@ $i++;
 	}
 	if($PageNumber >1){
 	$pdf->line($XPos2, $YPos+32,$XPos2, $YPos+12);
-	
+
 	//$pdf->line(19, $YPos+24,$Page_Width-$Right_Margin, $YPos+24);
 	}
 if($PageNumber ==1){
@@ -111,13 +111,13 @@ $pdf->line($Left_Margin2, 831,500, 831);
 $pdf->line($Left_Margin2, 830,$Left_Margin2, $YPos+($line_height*1));
 $pdf->line(240, 830,240, $YPos+12);
 $pdf->line(500, 830,500, $YPos+12);
-}	
+}
 }
 $LeftOvers = $pdf->addTextWrap($XPos2+10,$YPos+15,300,$FontSize,$totalmarks_array);
 $marks_total=$marks_total+$totalmarks_array;
 		}
-$subject_mean=$bus_report2->subject_meangrade2($_POST['subject_id'],$_POST['period_id'],$_POST['class_id'],$db);			
-	
+$subject_mean=$bus_report2->subject_meangrade2($_POST['subject_id'],$_POST['period_id'],$_POST['class_id'],$db);
+
 
 
 $pdf->line($Left_Margin2, $YPos+$line_height,500, $YPos+$line_height);
@@ -127,7 +127,7 @@ $mean=$marks_total/$count;
 else{
 $mean=0;
 }
-$LeftOvers = $pdf->addTextWrap($Left_Margin2+150,$YPos-10,300,$FontSize,_('Mean')._(': ').number_format($mean,2));			
+$LeftOvers = $pdf->addTextWrap($Left_Margin2+150,$YPos-10,300,$FontSize,_('Mean')._(': ').number_format($mean,2));
 
 
 $pdf->Output('Receipt-'.$_GET['ReceiptNumber'], 'I');
@@ -138,17 +138,16 @@ else { /*The option to print PDF was not hit */
 
 	include('includes/session.inc');
 	$title = _('Manage Students2');
-
 include('includes/header.inc');
-
+echo '<p class="page_title_text">' . ' ' . _('Exam & CAT Breakdown') . '';
 echo '<FORM METHOD="POST" ACTION="' . $_SERVER['PHP_SELF'] . '?' . SID . '">';
 echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-echo '<CENTER><TABLE><TR><TD>' . _('Class:') . '</TD><TD><SELECT Name="class_id">';
+echo '<TABLE class=enclosed><TR><TD>' . _('Class:') . '</TD><TD><SELECT Name="class_id">';
 		DB_data_seek($result, 0);
 		$sql = 'SELECT cl.id,cl.class_name FROM classes cl';
 		$result = DB_query($sql, $db);
 		while ($myrow = DB_fetch_array($result)) {
-			if ($myrow['id'] == $_POST['class_id']) {  
+			if ($myrow['id'] == $_POST['class_id']) {
 				echo '<OPTION SELECTED VALUE=';
 			} else {
 				echo '<OPTION VALUE=';
@@ -160,10 +159,10 @@ echo '<TR><TD>' . _('Period:') . '</TD><TD><SELECT Name="period_id">';
 		DB_data_seek($result, 0);
 		$sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year ";
+		INNER JOIN years ON years.id=cp.year ORDER BY cp.id DESC";
 		$result=DB_query($sql,$db);
 		while ($myrow = DB_fetch_array($result)) {
-			if ($myrow['id'] == $_POST['id']) {  
+			if ($myrow['id'] == $_POST['id']) {
 				echo '<OPTION SELECTED VALUE=';
 			} else {
 				echo '<OPTION VALUE=';
@@ -180,9 +179,9 @@ echo '<tr><td>' . _('Subject') . ":</td>
 		echo '<option value='. $myrow['id'] . '>' . $myrow['subject_name'];
 		} //end while loop
 		DB_data_seek($result,0);
-		echo '</select></td></tr>';	
+		echo '</select></td></tr>';
 	echo "</TABLE>";
-	echo "<P><CENTER><INPUT TYPE='Submit' NAME='PrintPDF' VALUE='" . _('Display') . "'>";
+	echo "<P><CENTER><INPUT TYPE='Submit' NAME='PrintPDF' VALUE='" . _('Show Breakdown') . "'>";
 
 	include('includes/footer.inc');;
 } /*end of else not PrintPDF */
@@ -211,7 +210,7 @@ function NewPageHeader () {
 $YPos= $Page_Height-$Top_Margin;
 
 
-	
+
 
 
 }

@@ -63,6 +63,86 @@ echo '<table cellpading=10 class=enclosed style="margin-bottom:20px; margin-top:
 <div id="result"></div>
 </div>';
 echo '<td><input type="submit" name="productSearch" value="'._('Add Item').'" /></td></tr>';
+function vote_head_distribution($invoice,$principal,$db){
+	$sql="SELECT invoice_items.*,stockmaster.description as descrip
+	FROM invoice_items,stockmaster
+	WHERE invoice_items.product_id=stockmaster.stockid
+	AND invoice_id='".$invoice."'
+	AND invoice_items.totalinvoice > 0
+	ORDER BY stockmaster.discontinued";
+	$result=DB_query($sql, $db);
+	while($myrow=DB_fetch_array($result)){
+	$product_paid=$myrow['paid'];
+	$required_amount= $myrow['totalinvoice'];
+	if($principal>0){
+		if($product_paid == $required_amount){
+		}
+		else{
+		$balance=$required_amount-$product_paid;
+		$principal=$principal-$balance;
+		if($principal>0  || $principal==0){
+		$sqlInner = "UPDATE invoice_items SET paid=paid +'".$balance."'
+		WHERE invoice_id='".$invoice."'
+		AND product_id like '".$myrow['product_id']."'";
+	  DB_query($sqlInner,$db);
+    }
+		else{
+		$principal=$principal+$balance;
+		$sqlInner= "UPDATE invoice_items SET paid=paid +'$principal'
+		WHERE invoice_id='".$invoice."'
+		AND product_id like '".$myrow['product_id']."'";
+		DB_query($sqlInner,$db);
+		$principal=0;
+			}
+			}
+		}
+	}
+	if($principal>0){
+		$count=2;
+		while($principal>0){
+		  $principal=distribute_vote_head_overpayment($principal,$invoice,$count,$db);
+			$count++;
+	    }
+	}
+}
+function distribute_vote_head_overpayment($principalAmount,$invoice,$count,$db){
+	$sql="SELECT invoice_items.*,stockmaster.description as descrip
+	FROM invoice_items,stockmaster
+	WHERE invoice_items.product_id=stockmaster.stockid
+	AND invoice_id='".$invoice."'
+	AND invoice_items.totalinvoice > 0
+	AND product_id !='ARREARS'
+	ORDER BY stockmaster.discontinued";
+	$result=DB_query($sql, $db);
+	while($myrow=DB_fetch_array($result)){
+		$required_amount= $myrow['totalinvoice']*$count;
+		$product_paid=$myrow['paid'];
+		if($principalAmount>0){
+			if($product_paid == $required_amount){
+				//ignore it since the product is fully settled
+			}
+			else{
+			$balance=$required_amount-$product_paid;
+			$principalAmount=$principalAmount-$balance;
+			if($principalAmount>0  || $principalAmount==0){
+			$sqlInner = "UPDATE invoice_items SET paid=paid +'".$balance."'
+			WHERE invoice_id='".$invoice."'
+			AND product_id like '".$myrow['product_id']."'";
+		  DB_query($sqlInner,$db);
+	    }
+			else{
+			$principalAmount=$principalAmount+$balance;
+			$sqlInner= "UPDATE invoice_items SET paid=paid +'$principalAmount'
+			WHERE invoice_id='".$invoice."'
+			AND product_id like '".$myrow['product_id']."'";
+			DB_query($sqlInner,$db);
+			$principalAmount=0;
+				}
+				}
+			}
+	}
+	return $principalAmount;
+}
 if(isset($_GET['invoiceNo']))
 {
   $_SESSION['selectedInvoice']=$_GET['invoiceNo'];
@@ -203,47 +283,13 @@ if(isset($_POST['submitInvoice']) && isset($_SESSION['selectedInvoice'])){
         $result = DB_query($sql,$db,$ErrMsg);
 				$i++;
 			 }
-       $sql="SELECT sum(amount) as amount FROM banktrans
+       $sql="SELECT sum(ovamount) as amount FROM debtortrans
        where transno ='".$_SESSION['selectedInvoice']."'";
        $result=DB_query($sql, $db);
        $myrow=DB_fetch_array($result);
-       $previousPayment=$myrow['amount'];
-      $sql="SELECT invoice_items.*,stockmaster.description as descrip
-     	FROM invoice_items,stockmaster
-     	WHERE invoice_items.product_id=stockmaster.stockid
-     	AND invoice_id='".$_SESSION['selectedInvoice']."'
-     	AND invoice_items.totalinvoice > 0
-     	ORDER BY stockmaster.discontinued";
-     	$result=DB_query($sql, $db);
-     	$product_paid=0;
-     	$rex=$previousPayment;
-     	while ($myrow=DB_fetch_array($result)){
-     	$product_paid=$myrow['paid'];
-     	$amount= $myrow['totalinvoice'];
-     	if($rex>0){
-     		if($product_paid == $amount){
-     		}
-     		else{
-     		$balance=$amount-$product_paid;
-     		$rex=$rex-$balance;
-     		if($rex>0  || $rex==0){
-     		$sql = "UPDATE invoice_items SET paid=paid +'".$balance."'
-     		WHERE invoice_id='".$_SESSION['selectedInvoice']."'
-     		AND product_id like '".$myrow['product_id']."'";
-     		DB_query($sql,$db);
-     		}
-     		else{
-     		$rex=$rex+$balance;
-     		$sql = "UPDATE invoice_items SET paid=paid +'$rex'
-     		WHERE invoice_id='".$_SESSION['selectedInvoice']."'
-     		AND product_id like '".$myrow['product_id']."'";
-     		DB_query($sql,$db);
-     		$rex=0;
-     				}
-     			}
-     		}
-     	}
-	 	prnMsg( _('products updated'),'success');
+       $previousPayment=-$myrow['amount'];
+       vote_head_distribution($_SESSION['selectedInvoice'],$previousPayment,$db);
+    prnMsg( _('products updated'),'success');
 	  unset($_SESSION['EditInvoiceItems']);
 	  unset($_SESSION['selectedInvoice']);
 	  unset($_SESSION['EditInvoiceItems']->LineItems);

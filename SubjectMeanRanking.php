@@ -9,7 +9,7 @@ require('grades/SubjectMeanRanking.php');
 
 $_SESSION['class'] = $_POST['class_id'];
 $_SESSION['period'] = $_POST['period_id'];
-$_SESSION['subject'] = $_POST['subject_id'];			
+$_SESSION['subject'] = $_POST['subject_id'];
 $PageNumber=1;
 $line_height=12;
 if ($PageNumber>1){
@@ -47,12 +47,12 @@ $result=DB_query($sql,$db);
 $myrow=DB_fetch_array($result);
 $grade=$myrow['grade_level'];
 
-/*$LeftOvers = $pdf->addTextWrap(100,$YPos-($line_height*11),500,$FontSize, _('Reportcard For').': ' . $myrow[0].'    '._('Period').': ' .$myrow2[1].'-'.$myrow2[2]);*/	
+/*$LeftOvers = $pdf->addTextWrap(100,$YPos-($line_height*11),500,$FontSize, _('Reportcard For').': ' . $myrow[0].'    '._('Period').': ' .$myrow2[1].'-'.$myrow2[2]);*/
 $LeftOvers = $pdf->addTextWrap(200,$YPos-($line_height*12),400,$FontSize,_('SUBJECTS MEAN RANKING REPORT'));
  $LeftOvers = $pdf->addTextWrap(200,$YPos-($line_height*12.3),110,$FontSize,'______________________________________________________________________________');
 
 $LeftOvers = $pdf->addTextWrap(40,$YPos-($line_height*15),300,$FontSize, _('Class').': ' . $grade);
-$LeftOvers = $pdf->addTextWrap(300,$YPos-($line_height*15),300,$FontSize, _('Period').': ' . $term.' '.$year);	
+$LeftOvers = $pdf->addTextWrap(300,$YPos-($line_height*15),300,$FontSize, _('Period').': ' . $term.' '.$year);
 $YPos +=20;
 $YPos -=$line_height;
 //Note, this is ok for multilang as this is the value of a Select, text in option is different
@@ -89,22 +89,22 @@ $count=$count+1;
 
 $total_mean=$total_mean+$b['mean'];
 $result = DB_query($sql,$db,$ErrMsg);
-				
+
 			}
-		}	
-			
+		}
+
 if($count>0)
 $subject_mean=number_format($total_mean/$count,2);
 else
 $subject_mean=0;
 $count2=0;
-		$sql = "select lower FROM  gradelevels 
+		$sql = "select lower FROM  gradelevels
 	WHERE id='".$_POST['grade']."'";
 	$result = DB_query($sql,$db);
 	$row = DB_fetch_row($result);
-	$lower_display=$row[0];	
+	$lower_display=$row[0];
 	if($lower_display==1){
-	
+
 		$sql = "SELECT sub.subject_name,csm.mean,sub.grading,u.realname FROM class_subject_mean csm
 		INNER JOIN subjects sub ON sub.id=csm.subject_id
 		INNER JOIN registered_students rs ON rs.subject_id=sub.id
@@ -125,7 +125,7 @@ $count2=0;
 		AND sub.display=1
 		GROUP BY rs.subject_id
 		ORDER BY csm.mean DESC";
-	}	
+	}
 		$result=DB_query($sql,$db);
 		while($myrow=DB_fetch_array($result)){
 					$count2=$count2+1;
@@ -136,25 +136,25 @@ $count2=0;
 					$result2=DB_query($sql2,$db);
 					$myrow2=DB_fetch_array($result2);
 					$reportgrade=$myrow2['grade'];
-					
+
 			$LeftOvers = $pdf->addTextWrap(40,$YPos-10,300,$FontSize,$count2);
-			$LeftOvers = $pdf->addTextWrap(70,$YPos-10,300,$FontSize,$myrow['subject_name']);	
+			$LeftOvers = $pdf->addTextWrap(70,$YPos-10,300,$FontSize,$myrow['subject_name']);
 			$LeftOvers = $pdf->addTextWrap(200,$YPos-10,300,$FontSize,number_format($myrow['mean'],2));
 			$LeftOvers = $pdf->addTextWrap(300,$YPos-10,300,$FontSize,$reportgrade);
 			$LeftOvers = $pdf->addTextWrap(370,$YPos-10,300,$FontSize,$myrow['realname']);
-				
+
 			$YPos -=$line_height;
 		}
-		
-		
+
+
 $sql = "SELECT grade FROM reportcardgrades
 		WHERE range_from <=  '".$subject_mean."'
 		AND range_to >='". $subject_mean."'";
 		$result=DB_query($sql,$db);
 		$myrow=DB_fetch_array($result);
-		$reportgrade=$myrow['grade'];	
-$YPos -=$line_height;		
-$LeftOvers = $pdf->addTextWrap(200,$YPos-10,300,$FontSize,_('Class Mean').' '.$subject_mean);		
+		$reportgrade=$myrow['grade'];
+$YPos -=$line_height;
+$LeftOvers = $pdf->addTextWrap(200,$YPos-10,300,$FontSize,_('Class Mean').' '.$subject_mean);
 $pdf->line(39, $YPos2,39, $YPos+($line_height*1));
 $pdf->line(69, $YPos2,69, $YPos+($line_height*1));
 $pdf->line(198, $YPos2,198, $YPos+($line_height*1));
@@ -168,22 +168,21 @@ $pdf->Output('Receipt-'.$_GET['ReceiptNumber'], 'I');
 
 }
 else { /*The option to print PDF was not hit */
-
 	include('includes/session.inc');
 	$title = _('Manage Students2');
 
-include('includes/header.inc');
-
+	include('includes/header.inc');
+echo '<p class="page_title_text">' . ' ' . _('Subjects Mean Ranking') . '';
 echo '<FORM METHOD="POST" ACTION="' . $_SERVER['PHP_SELF'] . '?' . SID . '">';
 echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-echo '<CENTER><TABLE><TR><TD>' . _('Period:') . '</TD><TD><SELECT Name="period_id">';
+echo '<TABLE class=enclosed><TR><TD>' . _('Period:') . '</TD><TD><SELECT Name="period_id">';
 		DB_data_seek($result, 0);
 		$sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year ";
+		INNER JOIN years ON years.id=cp.year ORDER BY cp.id DESC";
 		$result=DB_query($sql,$db);
 		while ($myrow = DB_fetch_array($result)) {
-			if ($myrow['id'] == $_POST['id']) {  
+			if ($myrow['id'] == $_POST['id']) {
 				echo '<OPTION SELECTED VALUE=';
 			} else {
 				echo '<OPTION VALUE=';
@@ -195,7 +194,7 @@ echo '<TR><TD>' . _('Class:') . '</TD><TD><SELECT Name="grade">';
 		$sql="SELECT id,grade_level FROM gradelevels ";
 		$result=DB_query($sql,$db);
 		while ($myrow = DB_fetch_array($result)) {
-			if ($myrow['id'] == $_POST['grade']) {  
+			if ($myrow['id'] == $_POST['grade']) {
 				echo '<OPTION SELECTED VALUE=';
 			} else {
 				echo '<OPTION VALUE=';
@@ -204,7 +203,7 @@ echo '<TR><TD>' . _('Class:') . '</TD><TD><SELECT Name="grade">';
 		} //end while loop
 	echo '</SELECT></TD></TR>';
 	echo "</TABLE>";
-	echo "<P><CENTER><INPUT TYPE='Submit' NAME='PrintPDF' VALUE='" . _('PrintPDF') . "'>";
+	echo "<P><CENTER><INPUT TYPE='Submit' NAME='PrintPDF' VALUE='" . _('Show Performance') . "'>";
 
 	include('includes/footer.inc');;
 } /*end of else not PrintPDF */

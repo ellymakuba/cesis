@@ -7,7 +7,7 @@ include('includes/PDFStarter.php');
 require('grades/EndTermReportClass.php');
 include('includes/phplot/phplot.php');
 include("Numbers/Words.php");
-	
+
 $PageNumber=1;
 $line_height=12;
 if ($PageNumber>1){
@@ -52,17 +52,17 @@ ORDER BY gender,name ";
 $DbgMsg = _('The SQL that was used to retrieve the information was');
 $ErrMsg = _('Could not check whether the group is recursive because');
 $result = DB_query($sql,$db,$ErrMsg,$DbgMsg);
-$YPos -=13;	
-$YPos3=$YPos;	
+$YPos -=13;
+$YPos3=$YPos;
 $LeftOvers = $pdf->addTextWrap(70,$YPos+1,300,$FontSize,_('NAME'));
-			$LeftOvers = $pdf->addTextWrap(270,$YPos+1,300,$FontSize,_('ADMNO')); 
+			$LeftOvers = $pdf->addTextWrap(270,$YPos+1,300,$FontSize,_('ADMNO'));
 			$LeftOvers = $pdf->addTextWrap(400,$YPos+1,300,$FontSize,_('GENDER'));
 $pdf->line(60, $YPos,$Page_Width-$Right_Margin-25, $YPos,$style);
-$YPos -=13;			
+$YPos -=13;
 			while ($row = DB_fetch_array($result))
 			{
 			$LeftOvers = $pdf->addTextWrap(70,$YPos+1,300,$FontSize,$row['name']);
-			$LeftOvers = $pdf->addTextWrap(270,$YPos+1,300,$FontSize,$row['debtorno']); 
+			$LeftOvers = $pdf->addTextWrap(270,$YPos+1,300,$FontSize,$row['debtorno']);
 			$LeftOvers = $pdf->addTextWrap(400,$YPos+1,300,$FontSize,$row['gender']);
 			$pdf->line(60, $YPos-1,$Page_Width-$Right_Margin-25, $YPos-1,$style);
 		   $YPos -=(1*$line_height);
@@ -73,18 +73,18 @@ $pdf->line(60, $YPos3,60, $YPos,$style);
 $pdf->line(540,$YPos3,540, $YPos,$style);
 $pdf->line(60, $YPos-1,$Page_Width-$Right_Margin-25, $YPos-1,$style);
 $pdf->Output('ReportCard-'.$_GET['ReceiptNumber'], 'I');
-	
+
 }
 else { /*The option to print PDF was not hit */
 include('includes/session.inc');
 	$title = _('Manage Students');
 
 include('includes/header.inc');
-
+echo '<p class="page_title_text">' . ' ' . _('Students Class List') . '';
 echo "<form method='post' action=" . $_SERVER['PHP_SELF'] . '>';
 	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-	echo '<table border="1">';
-	
+	echo '<table class=enclosed>';
+
 echo '<tr><td>' . _('Class') . ":</td>
 		<td><select name='student_class'>";
 		echo '<OPTION SELECTED VALUE=0>' . _('Select Class');
@@ -96,8 +96,8 @@ echo '<tr><td>' . _('Class') . ":</td>
 		} //end while loop
 		DB_data_seek($result,0);
 	echo '</select></td></tr></table>';
-		echo '<table border="1">';
-echo "<br><div class='centre'><input  type='Submit' name='PrintPDF' value='" . _('Display Students') . "'>&nbsp;<input  type=submit action=RESET VALUE='" . _('Reset') . "'></div>";	
+		echo '<table class=enclosed>';
+echo "<br><div class='centre'><input  type='Submit' name='PrintPDF' value='" . _('Display Students') . "'>&nbsp;<input  type=submit action=RESET VALUE='" . _('Reset') . "'></div>";
 include('includes/footer.inc');
 } /*end of else not PrintPDF */
 

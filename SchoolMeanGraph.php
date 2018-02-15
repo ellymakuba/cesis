@@ -1,7 +1,5 @@
 <?php
-
-/* $Id: SalesGraph.php 4839 2012-01-25 23:03:03Z vvs2012 $*/
-
+$PageSecurity = 2;
  include('includes/session.inc');
  include('includes/phplot/phplot.php');
  $title=_('School Mean Graph');
@@ -10,16 +8,16 @@
  $SelectADifferentPeriod ='';
 
  if (!isset($_POST['period_id'])){
-
+echo '<p class="page_title_text">' . ' ' . _('Class Mean Scores Graph') . '';
 	echo '<form method="POST" action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '">';
-	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />'; 
-	echo '<table class="selection">
+	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
+	echo '<table class=enclosed>
 			<tr><td>' . _('Select Period:') . '</td>
 			<td><select Name="period_id">';
 
 	$sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year ";
+		INNER JOIN years ON years.id=cp.year ORDER BY cp.id DESC";
 		$result=DB_query($sql,$db);
 		while ($myrow = DB_fetch_array($result)) {
 		echo '<option value='. $myrow['id'].  '>'.' '.$myrow['title'].' '.$myrow['year'];
@@ -48,7 +46,7 @@
 
 $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 		INNER JOIN terms ON terms.id=cp.term_id
-		INNER JOIN years ON years.id=cp.year 
+		INNER JOIN years ON years.id=cp.year
 		WHERE cp.id='".$_POST['period_id']."'";
 		$result=DB_query($sql,$db);
 		$myrow=DB_fetch_array($result);
@@ -56,11 +54,11 @@ $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 
 	$graph = new PHPlot(950,450);
 	$GraphTitle ='';
-	
+
 
 	$GraphTitle .= ' ' . _('School Mean for' . ' '.$term_name). "\n\r";
 	$GraphTitle .= ' ' . _('For All Classes');
-	
+
 
 	$SQL = "SELECT gl.grade_level,cm.mean FROM class_means cm
 	INNER JOIN gradelevels gl ON gl.id=cm.class
@@ -72,7 +70,7 @@ $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 	$graph->SetOutputFile('companies/' .$_SESSION['DatabaseName'] .  '/reports/salesgraph.png');
 	$graph->SetXTitle(_('Class'));
 	$graph->SetYTitle(_('Class Mean'));
-	
+
 	$graph->SetXTickPos('none');
 	$graph->SetXTickLabelPos('none');
 	$graph->SetBackgroundColor('white');
@@ -113,7 +111,7 @@ $sql="SELECT cp.id,terms.title,years.year FROM collegeperiods cp
 
 	//Draw it
 	$graph->DrawGraph();
-	echo '<table class="selection">
+	echo '<table class=enclosed>
 			<tr><td>';
 	echo '<p><img src="companies/' .$_SESSION['DatabaseName'] .  '/reports/salesgraph.png" alt="School mean score Graph"></img></p>';
 	echo '</td>

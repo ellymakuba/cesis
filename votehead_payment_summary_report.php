@@ -10,7 +10,7 @@ function getAllVoteHeads($db){
 }
 function getVoteHeadPayment($receiptNo,$db){
   $sql="SELECT stockid,
-  (SELECT paid FROM votehead_payments WHERE receipt_no='".$receiptNo."' AND product=stockid) as paid
+  (SELECT SUM(paid) as paid FROM votehead_payments WHERE receipt_no='".$receiptNo."' AND product=stockid) as paid
   FROM stockmaster ORDER BY discontinued";
   $result=DB_query($sql,$db);
   while($rows=DB_fetch_array($result)){
@@ -22,7 +22,7 @@ function getVoteHeadTotals($startDate,$endDate,$product,$db){
   $total=0;
   $receipts=getPaymentsMadeWithinPeriod($startDate,$endDate,$db);
   foreach($receipts as $receipt){
-    $sql="SELECT paid FROM votehead_payments WHERE receipt_no='".$receipt['id']."' AND product='".$product."' LIMIT 1";
+    $sql="SELECT SUM(paid) paid FROM votehead_payments WHERE receipt_no='".$receipt['id']."' AND product='".$product."' LIMIT 1";
     $result=DB_query($sql,$db);
     $row=DB_fetch_row($result);
     $total+=$row[0];
@@ -30,7 +30,8 @@ function getVoteHeadTotals($startDate,$endDate,$product,$db){
   return $total;
 }
 function getPaymentsMadeWithinPeriod($startDate,$endDate,$db){
-  $sql="SELECT id FROM debtortrans WHERE trandate BETWEEN '".FormatDateForSQL($startDate)."' AND '".FormatDateForSQL($endDate)."'";
+  $sql="SELECT id FROM debtortrans WHERE trandate BETWEEN '".FormatDateForSQL($startDate)."' AND '".FormatDateForSQL($endDate)."'
+  ORDER BY receipt_no";
   $result=DB_query($sql,$db);
   while($rows=DB_fetch_array($result)){
     $payments[]=array("id"=>$rows['id']);
@@ -82,7 +83,8 @@ else if(isset($_POST['Show'])){
     //$receipts[]=getPaymentsMadeWithinPeriod($_POST['datefrom'],$_POST['dateto']);
     $voteHeads=getAllVoteHeads($db);
     $sql="SELECT id,receipt_no FROM debtortrans WHERE trandate
-    BETWEEN '".FormatDateForSQL($_POST['datefrom'])."' AND '".FormatDateForSQL($_POST['dateto'])."'";
+    BETWEEN '".FormatDateForSQL($_POST['datefrom'])."' AND '".FormatDateForSQL($_POST['dateto'])."'
+    ORDER BY receipt_no";
     $result=DB_query($sql,$db);
 	 if(DB_num_rows($result)>0){
     echo '<table class=enclosed>';
@@ -135,7 +137,8 @@ else if(isset($_POST['excel'])){
   $current_row = 2;
     $voteHeads=getAllVoteHeads($db);
     $sql="SELECT id,receipt_no FROM debtortrans WHERE trandate
-    BETWEEN '".FormatDateForSQL($_POST['datefrom'])."' AND '".FormatDateForSQL($_POST['dateto'])."'";
+    BETWEEN '".FormatDateForSQL($_POST['datefrom'])."' AND '".FormatDateForSQL($_POST['dateto'])."'
+    ORDER BY receipt_no";
     $result=DB_query($sql,$db);
     if(DB_num_rows($result)>0){
     $objPHPExcel->getActiveSheet()->setCellValue('A2',"ReceiptNo");
